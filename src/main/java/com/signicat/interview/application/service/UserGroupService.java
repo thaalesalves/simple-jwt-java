@@ -50,8 +50,8 @@ public class UserGroupService {
     public UserGroup updateUserGroup(final UserGroup userGroup) {
 
         log.info("Updating user group with ID {}. UserGroup -> {}", userGroup.getId(), userGroup);
-        final UserGroup updatedUserGroup = userGroupToDTOMapper.apply(userGroupRepository.save(userGroupToEntityMapper.apply(userGroup)));
-        return updatedUserGroup;
+        final UserGroupEntity entity = userGroupToEntityMapper.apply(userGroup);
+        return userGroupToDTOMapper.apply(userGroupRepository.save(entity));
     }
 
     public void deleteUserGroup(final long userGroupId) {

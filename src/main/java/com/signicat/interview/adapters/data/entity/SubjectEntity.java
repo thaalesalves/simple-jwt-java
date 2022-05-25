@@ -36,7 +36,7 @@ public class SubjectEntity {
     private String username;
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
     }, mappedBy = "subjects")
