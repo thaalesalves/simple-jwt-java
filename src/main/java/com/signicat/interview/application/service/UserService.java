@@ -42,9 +42,9 @@ public class UserService implements UserDetailsService {
         return subjectToDTOMapper.apply(subjectRepository.save(entity));
     }
 
-    public SubjectEntity retrieveByUsername(String username) {
+    public Subject retrieveByUsername(String username) {
 
-        return subjectRepository.findByUsername(username);
+        return subjectToDTOMapper.apply(subjectRepository.findByUsername(username));
     }
 
     @Override

@@ -55,13 +55,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
             Authentication auth) throws IOException, ServletException {
 
-        final SubjectEntity subject = userService.retrieveByUsername(((User) auth.getPrincipal()).getUsername());
+        final Subject subject = userService.retrieveByUsername(((User) auth.getPrincipal()).getUsername());
         final Date exp = new Date(System.currentTimeMillis() + EXPIRATION_TIME);
         final Key key = Keys.hmacShaKeyFor(KEY.getBytes());
         final String token = Jwts.builder()
                 .claim("sub", subject.getId())
                 .claim("username", subject.getUsername())
-                //.claim("groups", subject.getGroups())
+                .claim("groups", subject.getGroups())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(exp)
                 .compact();
