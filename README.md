@@ -55,8 +55,46 @@ Feel free to switch them up if you have other ideas. The requirements for this a
 * Docker
 * JRE (OpenJDK 17)
 
-Running the application:
+## Running the application
 
-```docker-compose up```
+```docker-compose up``` (this builds the image and starts the app + database)
 
-```mvn clean install```
+```mvn clean install``` (this compiles the code - already executed in the Dockerfile)
+
+### Endpoints
+NOTE: the password requires 1 character of each type and at least 8 characters total
+
+* POST `/api/users/register`: Registers a new user. Request payload:
+  ```json
+  {
+    "username": "username@domain",
+    "password": "Flowch@rt12345"
+  }
+  ```
+
+* POST `/login`: Logs in to the app. Request payload:
+  ```json
+  {
+    "username": "username@domain",
+    "password": "Flowch@rt12345"
+  }
+  ```
+
+* POST `/api/groups/save`: Saves a new group. Request payload:
+  ```json
+  {
+      "name": "test"
+  }
+  ```
+
+* PUT `/api/groups/update`: Updates an existing group. Request payload:
+  ```json
+  {
+      "id": 2,
+      "name": "test_update"
+  }
+  ```
+
+* DELETE `/api/groups/delete/{id}`: deletes an existing group
+* GET `/api/groups/get/{id}`: returns existing groups by id
+* GET `/api/groups/get`: returns all existing groups
