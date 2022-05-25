@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -46,15 +47,20 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken authenticate(HttpServletRequest request) {
 
-        log.debug("Authenticating user on application. Request -> {}", request);
-        return Optional.ofNullable(request.getHeader(HEADER_NAME))
-                .filter(token -> !token.isBlank())
-                .map(token -> Jwts.parserBuilder()
-                        .setSigningKey(Keys.hmacShaKeyFor(KEY.getBytes()))
-                        .build()
-                        .parseClaimsJws(token)
-                        .getBody())
-                .map(claim -> new UsernamePasswordAuthenticationToken(claim, null, Collections.emptyList()))
-                .orElseThrow(() -> new RuntimeException("Error during authentication"));
+        try {
+            log.debug("Authenticating user on application. Request -> {}", request);
+            return Optional.ofNullable(request.getHeader(HEADER_NAME))
+                    .filter(token -> !token.isBlank())
+                    .map(token -> Jwts.parserBuilder()
+                            .setSigningKey(Keys.hmacShaKeyFor(KEY.getBytes()))
+                            .build()
+                            .parseClaimsJws(token)
+                            .getBody())
+                    .map(claim -> new UsernamePasswordAuthenticationToken(claim, null, Collections.emptyList()))
+                    .orElseThrow(() -> new RuntimeException("Error during authentication"));
+        } catch (ExpiredJwtException e) {
+            log.error("Error authenticating user. This token has expired.", e);
+            throw e;
+        }
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,6 +34,13 @@ public class UserController {
                             .message("Success")
                             .statusCode(200)
                             .additionalDetails(userService.signUp(newUser))
+                            .build());
+        } catch (ExpiredJwtException e) {
+            log.error("Error authenticating user. This token has expired.", e);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(PayloadResponse.builder()
+                            .message(e.getMessage())
+                            .statusCode(HttpStatus.FORBIDDEN.hashCode())
                             .build());
         } catch (PasswordNotStrongEnoughException e) {
             log.error("The password provided is not strong enough", e);
