@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.signicat.interview.adapters.data.entity.SubjectEntity;
 import com.signicat.interview.application.service.UserService;
 import com.signicat.interview.domain.model.Subject;
 
