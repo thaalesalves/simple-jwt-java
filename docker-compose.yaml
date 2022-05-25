@@ -15,3 +15,18 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
     container_name: psql
     hostname: psql
+  application:
+    image: interview:latest
+    networks:
+      - dockerlan
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: jdbc:postgresql://psql:5432/interview
+    container_name: application
+    hostname: application
+    depends_on:
+      - psql
+    build: 
+      context: ./
+      dockerfile: ./Dockerfile
